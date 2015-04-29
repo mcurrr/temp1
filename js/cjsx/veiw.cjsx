@@ -14,10 +14,8 @@ View = React.createClass
 					current={@props.current}
 					show={@props.show}
 					/>
-					<Video
-						events={@props.events}
-						current={@props.current}
-						show={@props.show}
+					<Video						
+						current={_.cloneDeep @props.current}
 						/>
 					<Outcomes
 						current={@props.current}

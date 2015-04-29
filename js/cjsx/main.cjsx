@@ -52,14 +52,16 @@ App = React.createClass
 									if event.event_tv_channel?
 										channel++
 										events.push event
+									else
+										if event.event_broadcast_url?
+											broadcast++
 #no outcomes - means it is statistic
 								else
 									statistic++
 				console.log "#{live} live events + #{statistic} statistics"
-				console.log "#{events.length} live events with video stream"
+				console.log "#{channel + broadcast} live events with video stream"
 				console.log "#{channel} - will be shown (blue)"
 				console.log "#{broadcast} - will not"
-				console.log events
 				@setState(
 					events: events 
 				)
@@ -81,12 +83,10 @@ App = React.createClass
 					console.log thrownError
 				success: (data) =>
 					current.id_tv = data.event_tv_channel
-					current.outcomes = if data.head_market.outcomes? then data.head_market.outcomes else [{outcome_name: 'no outcomes', outcome_coef: ''}]
 					@setState(
 						current: current
 					)
 					@_getVideoStreamPath()
-			console.log @state.current
 
 	_getVideoStreamPath: () ->
 #get current id_tv
