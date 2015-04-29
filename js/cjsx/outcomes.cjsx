@@ -6,9 +6,10 @@ Outcomes = React.createClass
 	render: ->
 		<div className='outcomes' style={"position": "absolute", "color": "#fff"}>
 			<ul>{
-				@props.current.outcomes?.map (outcome, i) =>
-					<li className='outcome' key={i}><span>{
-						"#{outcome.outcome_name} #{outcome.outcome_coef}"
+				if @props.current.i? && @props.events[@props.current.i].head_market.outcomes?
+					@props.events[@props.current.i].head_market.outcomes.map (outcome, i) =>
+						<li className='outcome' key={i}><span>{
+							"#{outcome.outcome_name} #{outcome.outcome_coef}"
 						}</span></li>
 			}
 			</ul>

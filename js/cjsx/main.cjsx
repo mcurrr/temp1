@@ -12,8 +12,9 @@ App = React.createClass
 	getInitialState: ->
 		{
 			events: []
-			current: {}
-			url: ''
+			current: {
+				url: ''
+			}
 		}
 
 	propTypes:
@@ -50,21 +51,15 @@ App = React.createClass
 								if _.keys(event.head_market).length
 									if event.event_tv_channel?
 										channel++
-										event.can_be_shown = true
 										events.push event
-#event can contain both of two params (channel & broadcast)
-									else
-										if event.event_broadcast_url?
-											broadcast++
-											event.can_be_shown = false
-											events.push event
 #no outcomes - means it is statistic
 								else
 									statistic++
 				console.log "#{live} live events + #{statistic} statistics"
 				console.log "#{events.length} live events with video stream"
 				console.log "#{channel} - will be shown (blue)"
-				console.log "#{broadcast} - will not (orange)"
+				console.log "#{broadcast} - will not"
+				console.log events
 				@setState(
 					events: events 
 				)
@@ -75,29 +70,23 @@ App = React.createClass
 			current.i = i
 			@setState(
 				current: current 
-						)
-#checking for valid stream
-			if !@state.events[i].can_be_shown
-				console.log "will be no ajax - invalid stream"
-				@setState(
-					url: '' 
 				)
-			else
 #get the video stream number of current event
-				$.ajax
-					url: "https://www.favbet.com/live/markets/event/#{@state.events[i].event_id}/"
-					cache: false
-					dataType: 'json'
-					error: (xhr, ajaxOptions, thrownError) ->
-						console.log xhr.status
-						console.log thrownError
-					success: (data) =>
-						current.id_tv = data.event_tv_channel
-						current.outcomes = if data.head_market.outcomes? then data.head_market.outcomes else [{outcome_name: 'no outcomes', outcome_coef: ''}]
-						@setState(
-							current: current
-						)
-						@_getVideoStreamPath()
+			$.ajax
+				url: "https://www.favbet.com/live/markets/event/#{@state.events[i].event_id}/"
+				cache: false
+				dataType: 'json'
+				error: (xhr, ajaxOptions, thrownError) ->
+					console.log xhr.status
+					console.log thrownError
+				success: (data) =>
+					current.id_tv = data.event_tv_channel
+					current.outcomes = if data.head_market.outcomes? then data.head_market.outcomes else [{outcome_name: 'no outcomes', outcome_coef: ''}]
+					@setState(
+						current: current
+					)
+					@_getVideoStreamPath()
+			console.log @state.current
 
 	_getVideoStreamPath: () ->
 #get current id_tv
@@ -114,11 +103,13 @@ App = React.createClass
 				if !url
 					error = $(data).find('streams').attr('error')
 					url = ''
+					current = @state.current
+					current.url = url
 					@setState(
-						url: url 
+						current: current 
 					)
 					console.log "error in XML: #{error}"
-					console.log @state.url
+					console.log @state.current.url
 				else
 	#decoding url with regexp
 					url = url.replace /%3A/g, ':'
@@ -144,14 +135,18 @@ App = React.createClass
 								urlAuth = $(data).find('token').attr('auth')
 	#final url
 								url = "rtmp://#{urlUrl}:#{urlStream}"
+								current = @state.current
+								current.url = url
 								@setState(
-									url: url 
+									current: current 
 								)
 								console.log "@state ajax url: #{@state.url}"
 								console.log "stream with autentication, NOT able to show"
 					else
+						current = @state.current
+						current.url = url
 						@setState(
-							url: url 
+							current: current 
 						)
 
 	render: ->
@@ -159,7 +154,6 @@ App = React.createClass
 			show={@handlerShowingVideo}
 			events={@state.events}
 			current={@state.current}
-			url={@state.url}
 		/>
 
-React.render(<App/>, document.getElementById('main'))
+window.App = React.render(<App/>, document.getElementById('main'))

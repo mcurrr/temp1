@@ -17,11 +17,11 @@ View = React.createClass
 					<Video
 						events={@props.events}
 						current={@props.current}
-						url={@props.url}
 						show={@props.show}
 						/>
 					<Outcomes
 						current={@props.current}
+						events={@props.events}
 					/>
 			</div>
 		</div>

@@ -7,18 +7,22 @@ List = React.createClass
 		<div className='col-sm-4'>
 			<ul>{
 				@props.events.map (event, i) =>
-					if @props.current.i == i 
-						if event.can_be_shown
-							style = 'btn btn-block btn-primary'
-						else
+					if @props.current.i == i #if active
+						if event.new
 							style = 'btn btn-block btn-danger'
-					else 
-						if event.can_be_shown
-							style = 'btn btn-block btn-info'
+							newWord = 'new! '
 						else
-							style = 'btn btn-block btn-warning'
+							style = 'btn btn-block btn-primary'
+							newWord = ''
+					else 
+						if event.new
+							style = 'btn btn-block btn-success'
+							newWord = 'new! '
+						else
+							style = 'btn btn-block btn-info'
+							newWord = ''
 					<li onClick={@props.show.bind null, i} key={i}><a href="#" onclick="event.preventDefault();" className={style} style={{"overflow": "hidden", "textOverflow": "ellipsis"}}>{
-						"#{i+1} #{event.event_name}"
+						"#{i+1} #{newWord} #{event.event_name}"
 						}</a></li>
 			}
 			</ul>
