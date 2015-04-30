@@ -56,8 +56,6 @@ sortMessage = (e) ->
 #===================EVENTS
 
       when 'event.unsuspend'
-        console.log 'event.unsuspend? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -73,8 +71,6 @@ sortMessage = (e) ->
             false
       
       when 'event.suspend'
-        console.log 'event.suspend? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -96,8 +92,6 @@ sortMessage = (e) ->
             return false
 
       when 'event.set_finished'
-        console.log 'event.set_finished? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -112,8 +106,6 @@ sortMessage = (e) ->
             false
 
       when 'event.delete'
-        console.log "event.deleted?"
-        console.log inCome.data
         window.output = "#{inCome.type}"
         events = window.App.state.events
         del = _.remove events, (event) ->
@@ -131,8 +123,6 @@ sortMessage = (e) ->
           console.log "ACTION-=-=-=-=-#{del[0].event_name} DELETED!"
           
       when 'event.insert'
-        console.log 'event.insert?'
-        console.log inCome.data
         events = window.App.state.events
         if _.keys(inCome.data.head_market).length
           if inCome.data.event_tv_channel?
@@ -174,8 +164,6 @@ sortMessage = (e) ->
             false
 
       when 'market.unsuspend'
-        console.log 'market.unsuspend? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -193,8 +181,6 @@ sortMessage = (e) ->
               false
 
       when 'market.suspend'
-        console.log 'market.suspend? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -212,8 +198,6 @@ sortMessage = (e) ->
               false
 
       when 'market.delete'
-        console.log 'market.delete? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -231,8 +215,6 @@ sortMessage = (e) ->
               false
 
       when 'market.unsuspend_list'
-        console.log 'market.unsuspend_list? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
@@ -250,8 +232,6 @@ sortMessage = (e) ->
               false
 
       when 'market.suspend_list'
-        console.log 'market.suspend_list? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id

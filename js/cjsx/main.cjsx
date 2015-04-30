@@ -94,7 +94,7 @@ App = React.createClass
 
   _deleteNewWord: (i) ->
     events = @state.events
-    if events[i].new
+    if !!events[i].new
       events[i].new = false
     @setState(
           events: events
@@ -103,11 +103,7 @@ App = React.createClass
   _deleteFinished: () ->
     events = @state.events
     _.remove events, (event) ->
-      if event.finished?
-        console.log "REMOVING FINISHED #{event.event_name}=================>>>>>>>>>"
-        true
-      else
-        false
+      !!event.finished
     @setState(
           events: events
         )
@@ -143,7 +139,6 @@ App = React.createClass
           url = url.replace /%3D/g, '='
           url = url.replace /%26/g, '&'
           if url.match /^http/
-            console.log "MATCH!"
             $.ajax
               url: url
               cache: false
@@ -152,9 +147,7 @@ App = React.createClass
                 console.log xhr.status
                 console.log thrownError
               success: (data) =>
-  #get URL from XML of stream
-                console.log data
-  #assembling url parts
+  #get URL from XML of stream, assembling url parts
                 urlUrl = $(data).find('token').attr('url')
                 urlStream = $(data).find('token').attr('stream')
                 urlAuth = $(data).find('token').attr('auth')
@@ -165,7 +158,6 @@ App = React.createClass
                 @setState(
                   current: current 
                 )
-                console.log "@state ajax url: #{@state.url}"
                 console.log "stream with autentication, NOT able to show"
           else
             current = @state.current
