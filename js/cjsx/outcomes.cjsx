@@ -5,7 +5,7 @@ Outcomes = React.createClass
 
 	render: ->
 		<div className='outcomes' style={"position": "absolute", "color": "#fff"}>
-			<ul>{
+			<ul style={"list-style": "none"}>{
 				if @props.current.i? && @props.events[@props.current.i].head_market.outcomes?
 					if @props.events[@props.current.i].head_market.market_suspend == 'no'
 						style = 'coefShow'
@@ -15,7 +15,7 @@ Outcomes = React.createClass
 
 						<li className='outcome' key={i}>
 							<span>{
-								"#{outcome.outcome_name}"
+								"#{outcome.outcome_name} : "
 							}</span>
 							<span className={style}>{
 								"#{outcome.outcome_coef}"

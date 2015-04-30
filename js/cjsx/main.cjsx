@@ -63,9 +63,9 @@ App = React.createClass
 
         console.log "#{live} live events + #{statistic} channel statistics"
         console.log "#{channel} live events with video stream"
-        console.log events
+        sortedEvents = _.sortBy events, 'event_name'
         @setState(
-          events: events 
+          events: sortedEvents 
         )
 
   handlerShowingVideo: (i) ->
@@ -76,6 +76,7 @@ App = React.createClass
         current: current 
         )
       @_deleteFinished()
+      @_deleteNewWord(i)
 #get the video stream number of current event
       $.ajax
         url: "https://www.favbet.com/live/markets/event/#{@state.events[i].event_id}/"
@@ -91,10 +92,19 @@ App = React.createClass
           )
           @_getVideoStreamPath()
 
+  _deleteNewWord: (i) ->
+    events = @state.events
+    if events[i].new
+      events[i].new = false
+    @setState(
+          events: events
+        )
+
   _deleteFinished: () ->
+    events = @state.events
     _.remove events, (event) ->
       if event.finished?
-        console.log "REMOVING FINISHED #{event.event_name}================="
+        console.log "REMOVING FINISHED #{event.event_name}=================>>>>>>>>>"
         true
       else
         false
