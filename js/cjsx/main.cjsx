@@ -14,6 +14,7 @@ App = React.createClass
       events: []
       current: {
         url: ''
+        i: null
       }
     }
 
@@ -69,13 +70,10 @@ App = React.createClass
         )
 
   handlerShowingVideo: (i) ->
+    @_deleteFinished()
     if i != @state.current.i
-      current = @state.current
-      current.i = i
-      @setState(
-        current: current 
-        )
-      @_deleteFinished()
+#setting @state.current in @_makeItActive
+      @_makeItActive(i)
       @_deleteNewWord(i)
 #get the video stream number of current event
       $.ajax
@@ -86,11 +84,28 @@ App = React.createClass
           console.log xhr.status
           console.log thrownError
         success: (data) =>
+          current = @state.current
           current.id_tv = data.event_tv_channel
           @setState(
             current: current
           )
           @_getVideoStreamPath()
+
+  _makeItActive: (i) ->
+    events = @state.events
+    events.map (event) ->
+      if event.active?
+        delete event.active
+    events[i].active = true
+    current = @state.current
+    actElem = _.find events, (event) ->
+      !!event.active
+#setting current.i that way because of new events incoming
+    current.i = _.indexOf events, actElem
+    console.log "active event", current.i
+    @setState(
+      current: current 
+      )
 
   _deleteNewWord: (i) ->
     events = @state.events
@@ -102,8 +117,10 @@ App = React.createClass
 
   _deleteFinished: () ->
     events = @state.events
+    console.log "BEFORE DELETING FINISHED", events
     _.remove events, (event) ->
       !!event.finished
+    console.log "AFTER DELETING FINISHED", events
     @setState(
           events: events
         )

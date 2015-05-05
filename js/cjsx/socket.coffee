@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "31E508294EC3DC7CE3A9EB8216"})
+  window.socket.send(JSON.stringify {user_ssid: "26332554CC688E4251377EC315"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]
@@ -41,6 +41,7 @@ sortMessage = (e) ->
               event.head_market.outcomes.map (coef) ->
                 if obj.outcome_id == coef.outcome_id
                   coef.outcome_coef = obj.outcome_coef
+                  console.log "coef of #{event.event_name} had changed"
                   ###
                   SET STATE HERE                  
                   ###
@@ -51,7 +52,7 @@ sortMessage = (e) ->
       when 'outcome.update_result'
         console.log "<-=-=-=-=-=-=-=-=-=-=WHAT?-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
         console.log "#{inCome.type}"
-        console.log inCome.data 
+        console.log inCome.data
       
 #===================EVENTS
 
@@ -83,12 +84,11 @@ sortMessage = (e) ->
         false
       
       when 'event.update'
-        console.log 'event.update? ALL'
-        console.log inCome.data
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
             console.log "UPDATE CHANNEL #{event.event_name} IF YOU KNOW WHAT TO UPDATE!"
+            console.log inCome.data
             return false
 
       when 'event.set_finished'
@@ -107,6 +107,8 @@ sortMessage = (e) ->
 
       when 'event.delete'
         window.output = "#{inCome.type}"
+        console.log "EVENT DELETE"
+        console.log inCome.type, inCome.data, "<------------------"
         events = window.App.state.events
         del = _.remove events, (event) ->
           event.event_id == inCome.data.event_id
@@ -123,6 +125,8 @@ sortMessage = (e) ->
           console.log "ACTION-=-=-=-=-#{del[0].event_name} DELETED!"
           
       when 'event.insert'
+        console.log "EVENT INSERT"
+        console.log inCome.type, inCome.data, "<------------------"
         events = window.App.state.events
         if _.keys(inCome.data.head_market).length
           if inCome.data.event_tv_channel?
@@ -131,6 +135,13 @@ sortMessage = (e) ->
             events.push inCome.data
 #sorting new array by the event name
             sortedEvents = _.sortBy events, 'event_name'
+#recounting current.i
+            current = window.App.state.current
+            actElem = _.find events, (event) ->
+              !!event.active
+            console.log "current.i was = #{current.i}"
+            current.i = _.indexOf events, actElem
+            console.log "now current.i = #{current.i} because of new incoming"
             ###
             SET STATE HERE                  
             ###
@@ -146,22 +157,21 @@ sortMessage = (e) ->
 #================MARKETS
 
       when 'market.insert_list'
-        console.log 'market.insert_list? ALL'
-        console.log inCome.data
+        console.log "MARKET INSERT_LIST"
+        console.log inCome.type, inCome.data, "<------------------"
         events = window.App.state.events
-        events.map (event) ->
-          if event.event_id == inCome.data.event_id
-            event.head_market = inCome.data
-            console.log "market.insert_list #{event.event_name}"
-            console.log inCome.data
-            console.log event
-            ###
-            SET STATE HERE                  
-            ###
-            window.App.setState(
-              events: events
-              )
-            false
+        inCome.data.map (inComeChild) ->
+          events.map (event) ->
+            if event.event_id == inComeChild.event_id
+              event.head_market = inComeChild
+              console.log "market.insert_list #{event.event_name}"
+              ###
+              SET STATE HERE                  
+              ###
+              window.App.setState(
+                events: events
+                )
+              false
 
       when 'market.unsuspend'
         events = window.App.state.events
@@ -169,9 +179,6 @@ sortMessage = (e) ->
           if event.event_id == inCome.data.event_id
             if event.head_market.market_id = inCome.data.market_id
               event.head_market.market_suspend = 'no'
-              console.log "market.unsuspend #{event.event_name}"
-              console.log inCome.data
-              console.log event
               ###
               SET STATE HERE                  
               ###
@@ -186,9 +193,6 @@ sortMessage = (e) ->
           if event.event_id == inCome.data.event_id
             if event.head_market.market_id = inCome.data.market_id
               event.head_market.market_suspend = 'yes'
-              console.log "market.suspend #{event.event_name}"
-              console.log inCome.data
-              console.log event
               ###
               SET STATE HERE                  
               ###
@@ -199,6 +203,8 @@ sortMessage = (e) ->
 
       when 'market.delete'
         events = window.App.state.events
+        console.log "MARKET DELETE"
+        console.log inCome.type, inCome.data, "<------------------"
         events.map (event) ->
           if event.event_id == inCome.data.event_id
             if event.head_market.market_id = inCome.data.market_id
@@ -220,9 +226,6 @@ sortMessage = (e) ->
           if event.event_id == inCome.data.event_id
             if event.head_market.market_id = inCome.data.market_id
               event.head_market.market_suspend = 'no'
-              console.log "market.unsuspend_list #{event.event_name}"
-              console.log inCome.data
-              console.log event
               ###
               SET STATE HERE                  
               ###
@@ -249,6 +252,6 @@ sortMessage = (e) ->
               false
 
       else window.output = "SMTH NEW!!! #{inCome.type}======!!!!!!!!!!======"
-    events
+
 
 module.exports = window.socket
