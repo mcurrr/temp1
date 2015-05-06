@@ -70,61 +70,114 @@ App = React.createClass
         )
 
   handlerShowingVideo: (i) ->
-    @_deleteFinished()
-    if i != @state.current.i
-#setting @state.current in @_makeItActive
-      @_makeItActive(i)
-      @_deleteNewWord(i)
-#get the video stream number of current event
-      $.ajax
-        url: "https://www.favbet.com/live/markets/event/#{@state.events[i].event_id}/"
-        cache: false
-        dataType: 'json'
-        error: (xhr, ajaxOptions, thrownError) ->
-          console.log xhr.status
-          console.log thrownError
-        success: (data) =>
-          current = @state.current
-          current.id_tv = data.event_tv_channel
-          @setState(
-            current: current
-          )
-          @_getVideoStreamPath()
+    console.log "i: #{i}"
+    if @_hasFinished()
+      @_deleteFinished(i)
+#@_deleteFinished include @_deleteNewWord() and @_getIdTv()
+    else
+      if i != @state.current.i
+        events = @state.events
+        current = @state.current
+        events.map (event) ->
+          if event.active?
+            delete event.active
+        events[i].active = true
+        current.i = i
+        @setState(
+          events: events
+          current: current
+        )
+        @_deleteNewWord()
+        @_getIdTv()
+    console.log "current.i: #{@state.current.i}"
 
-  _makeItActive: (i) ->
-    events = @state.events
-    events.map (event) ->
-      if event.active?
-        delete event.active
-    events[i].active = true
-    current = @state.current
-    actElem = _.find events, (event) ->
-      !!event.active
-#setting current.i that way because of new events incoming
-    current.i = _.indexOf events, actElem
-    console.log "active event", current.i
-    @setState(
-      current: current 
-      )
+  _getIdTv: () ->
+    $.ajax
+      url: "https://www.favbet.com/live/markets/event/#{@state.events[@state.current.i].event_id}/"
+      cache: false
+      dataType: 'json'
+      error: (xhr, ajaxOptions, thrownError) ->
+        console.log xhr.status
+        console.log thrownError
+      success: (data) =>
+        current = @state.current
+        current.id_tv = data.event_tv_channel
+        @setState(
+          current: current
+        )
+        @_getVideoStreamPath()
 
-  _deleteNewWord: (i) ->
+
+  _deleteNewWord: () ->
     events = @state.events
-    if !!events[i].new
-      events[i].new = false
-    @setState(
+#using "@state.current.i" instead of just "i" because "i" might change during deleting finished events
+    if @state.current.i?
+      if !!events[@state.current.i].new
+        events[@state.current.i].new = false
+        @setState(
           events: events
         )
 
-  _deleteFinished: () ->
+  _hasFinished: ->
     events = @state.events
-    console.log "BEFORE DELETING FINISHED", events
-    _.remove events, (event) ->
+    hasIt = _.find events, (event) ->
       !!event.finished
-    console.log "AFTER DELETING FINISHED", events
-    @setState(
-          events: events
-        )
+#    console.log "hasFinished? - #{!!hasIt}"
+    !!hasIt
 
+  _deleteFinished: (i) ->
+    events = @state.events
+    current = @state.current
+#if click was on finished event then just delete all finished events and make non-active those who left
+    if !!events[i].finished
+      current.i = null
+      _.remove events, (event) ->
+        !!event.finished
+      events.map (event) ->
+        if event.active?
+          delete event.active
+      @setState(
+        events: events
+        current: current
+      )
+      console.log "#1: click was on finished event"
+      console.log "current.i: ", current.i
+      console.log "events: ", events
+    else
+#if click was on non-finished but active event then delete finished and reculculate current active event
+      if i == current.i
+        _.remove events, (event) ->
+          !!event.finished
+        actElem = _.find events, (event) ->
+          !!event.active
+        current.i = _.indexOf events, actElem
+        @setState(
+          events: events
+          current: current
+        )
+        console.log "#2: click was on non-finished but active event"
+        console.log "current.i: ", current.i
+        console.log "events: ", events
+#if click was on non-finished and non-active event then make it active then delete finished and then reculculate current active event
+      else
+        events.map (event) ->
+          if event.active?
+            delete event.active
+        events[i].active = true
+        _.remove events, (event) ->
+          !!event.finished
+        actElem = _.find events, (event) ->
+          !!event.active
+        current.i = _.indexOf events, actElem
+        @setState(
+          events: events
+          current: current
+        )
+        @_getIdTv()
+        console.log "#3: click was on non-finished and non-active event"
+        console.log "current.i: ", current.i
+        console.log "events: ", events
+    @_deleteNewWord()
 
   _getVideoStreamPath: () ->
 #get current id_tv

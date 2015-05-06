@@ -16,9 +16,7 @@ module.exports =
 				"poster": "https://www.favbet.com/static/themes/1/img/logo.png?v=1"
 			}).play()
 		), 100
-		console.log 'video playing...'
 
 	deleteVideo: ->
 		window.isPlayerExist = false
 		videojs("favbet-tv-video").dispose()
-		console.log "video deleted"

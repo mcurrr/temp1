@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "26332554CC688E4251377EC315"})
+  window.socket.send(JSON.stringify {user_ssid: "5ak2m6t3qt4j6cho181gqufv44"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]
@@ -87,9 +87,27 @@ sortMessage = (e) ->
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
-            console.log "UPDATE CHANNEL #{event.event_name} IF YOU KNOW WHAT TO UPDATE!"
-            console.log inCome.data
-            return false
+            console.log "UPDATE CHANNEL #{event.event_name}"
+            if event.event_tv_channel != inCome.data.event_tv_channel
+              event.event_tv_channel = inCome.data.event_tv_channel
+              console.log "REPLACE CHANNEL IN #{event.event_name}!"
+              ###
+              SET STATE HERE                  
+              ###
+              window.App.setState(
+                events: events
+              )
+              if !!event.active
+                current = window.App.state.current
+                current.id_tv = event.event_tv_channel
+                window.App.setState(
+                  current: current
+                )
+                window.App._getVideoStreamPath()
+                console.log "WOPS! TV CHANNEL WAS CHANGED RIGHT NOW+++++++++++++++++++++++++++"
+              else
+                console.log 
+                false
 
       when 'event.set_finished'
         events = window.App.state.events
@@ -125,8 +143,6 @@ sortMessage = (e) ->
           console.log "ACTION-=-=-=-=-#{del[0].event_name} DELETED!"
           
       when 'event.insert'
-        console.log "EVENT INSERT"
-        console.log inCome.type, inCome.data, "<------------------"
         events = window.App.state.events
         if _.keys(inCome.data.head_market).length
           if inCome.data.event_tv_channel?
@@ -157,8 +173,6 @@ sortMessage = (e) ->
 #================MARKETS
 
       when 'market.insert_list'
-        console.log "MARKET INSERT_LIST"
-        console.log inCome.type, inCome.data, "<------------------"
         events = window.App.state.events
         inCome.data.map (inComeChild) ->
           events.map (event) ->
