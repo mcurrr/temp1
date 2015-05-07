@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "5ak2m6t3qt4j6cho181gqufv44"})
+  window.socket.send(JSON.stringify {user_ssid: "B564A47FE07237410E8DCD5EC7"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]
@@ -88,11 +88,12 @@ sortMessage = (e) ->
         events.map (event) ->
           if event.event_id == inCome.data.event_id
             console.log "UPDATE CHANNEL #{event.event_name}"
+            console.log inCome.data
             if event.event_tv_channel != inCome.data.event_tv_channel
               event.event_tv_channel = inCome.data.event_tv_channel
               console.log "REPLACE CHANNEL IN #{event.event_name}!"
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events
@@ -103,10 +104,8 @@ sortMessage = (e) ->
                 window.App.setState(
                   current: current
                 )
-                window.App._getVideoStreamPath()
+                window.App._getVideoStreamPath() #WILL IT WORK???
                 console.log "WOPS! TV CHANNEL WAS CHANGED RIGHT NOW+++++++++++++++++++++++++++"
-              else
-                console.log 
                 false
 
       when 'event.set_finished'
@@ -116,7 +115,7 @@ sortMessage = (e) ->
             console.log "FINISHED EVENT #{event.event_name}! RESULT: #{inCome.data.event_result_name}"
             event.finished = true
             ###
-            SET STATE HERE                  
+            SET STATE HERE
             ###
             window.App.setState(
               events: events
@@ -134,7 +133,7 @@ sortMessage = (e) ->
         if del.length
           console.log "WAS", events.length + del.length
           ###
-          SET STATE HERE                  
+          SET STATE HERE
           ###
           window.App.setState(
             events: events
@@ -159,7 +158,7 @@ sortMessage = (e) ->
             current.i = _.indexOf events, actElem
             console.log "now current.i = #{current.i} because of new incoming"
             ###
-            SET STATE HERE                  
+            SET STATE HERE
             ###
             window.App.setState(
               events: sortedEvents
@@ -180,7 +179,7 @@ sortMessage = (e) ->
               event.head_market = inComeChild
               console.log "market.insert_list #{event.event_name}"
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events
@@ -194,7 +193,7 @@ sortMessage = (e) ->
             if event.head_market.market_id = inCome.data.market_id
               event.head_market.market_suspend = 'no'
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events
@@ -208,7 +207,7 @@ sortMessage = (e) ->
             if event.head_market.market_id = inCome.data.market_id
               event.head_market.market_suspend = 'yes'
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events
@@ -227,7 +226,7 @@ sortMessage = (e) ->
               console.log inCome.data
               console.log event
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events
@@ -241,7 +240,7 @@ sortMessage = (e) ->
             if event.head_market.market_id = inCome.data.market_id
               event.head_market.market_suspend = 'no'
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events
@@ -258,7 +257,7 @@ sortMessage = (e) ->
               console.log inCome.data
               console.log event
               ###
-              SET STATE HERE                  
+              SET STATE HERE
               ###
               window.App.setState(
                 events: events

@@ -66,7 +66,7 @@ App = React.createClass
         console.log "#{channel} live events with video stream"
         sortedEvents = _.sortBy events, 'event_name'
         @setState(
-          events: sortedEvents 
+          events: sortedEvents
         )
 
   handlerShowingVideo: (i) ->
@@ -129,8 +129,10 @@ App = React.createClass
     events = @state.events
     current = @state.current
 #if click was on finished event then just delete all finished events and make non-active those who left
+#INFO: with this click player will disapear
     if !!events[i].finished
       current.i = null
+      current.url = ''
       _.remove events, (event) ->
         !!event.finished
       events.map (event) ->
@@ -188,6 +190,12 @@ App = React.createClass
       error: (xhr, ajaxOptions, thrownError) ->
         console.log xhr.status
         console.log thrownError
+        current.url = ''
+        @setState(
+          current: current
+        )
+        if xhr.status == 403
+          console.log "YOU NEED TO LOG IN"
       success: (data) =>
 #get URL from XML of stream
         url = $(data).find('stream').attr('request_stream')
@@ -233,7 +241,7 @@ App = React.createClass
             current = @state.current
             current.url = url
             @setState(
-              current: current 
+              current: current
             )
 
   render: ->
