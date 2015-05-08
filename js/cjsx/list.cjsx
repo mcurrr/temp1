@@ -20,9 +20,11 @@ List = React.createClass
             word = 'FIN '
             style = 'btn btn-block btn-danger'
 
-          <li onClick={@props.show.bind null, i} key={i + event.event_name}><a href="#" onclick="event.preventDefault();" className={style} style={{"overflow": "hidden", "textOverflow": "ellipsis"}}>{
+          <li onClick={@props.show.bind null, i} key={i + event.event_name} title="#{event.event_name}">
+          <a href="#" onclick="event.preventDefault();" className={style} style={{"overflow": "hidden", "textOverflow": "ellipsis"}}>{
             "#{i+1} #{word} #{event.event_name}"
-            }</a></li>
+          }</a>
+          </li>
       }
       </ul>
     </div>

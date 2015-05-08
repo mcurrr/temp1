@@ -18,6 +18,6 @@ Video = React.createClass
         player.deleteVideo()
 
   render: ->
-    <div ref="target"/>
+    <div className = {"video"} ref="target"/>
 
 module.exports = Video

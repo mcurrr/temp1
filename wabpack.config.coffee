@@ -32,8 +32,8 @@ module.exports = {
     output: {
         path: __dirname
         publicPath : 'http://10.1.4.67:8080/assets' #'/static/js/dist/'
-        filename: "[name].bundle.js"
-        chunkFilename: "[id].chunk.js"
+        filename: "bundle.js"
+#        chunkFilename: "[id].chunk.js"
         pathinfo: true
     }
 
@@ -45,37 +45,7 @@ module.exports = {
         loaders: [
             { test: /\.cjsx$/, loaders: ['react-hot', 'coffee-loader', 'cjsx-loader']}
             { test: /\.coffee$/, loader: 'coffee-loader' }
-        ]
-        noParse: [
-            path.join __dirname, '/js/bullet.js',
-            path.join __dirname, '/node_modules/react/react.js',
-            path.join __dirname, '/node_modules/react/addons.js',
+            { test: /\.styl$/, loader: 'stylus' }
         ]
     }
-    plugins: [
-        new webpack.HotModuleReplacementPlugin()
-
-        new webpack.optimize.OccurenceOrderPlugin true
-
-        new webpack.optimize.CommonsChunkPlugin {
-            name: "vendor"
-            filename: "vendor.bundle.js"
-            minChunks: Infinity
-        }
-
-        new webpack.ProvidePlugin {
-           React : 'react/addons'
-           $     : "jquery"
-           'window.$'     : "jquery"
-           jQuery: "jquery"
-           _     : "lodash"
-        }
-
-        new webpack.optimize.DedupePlugin()
-        new webpack.DefinePlugin {
-            "process.env": {
-                NODE_ENV: JSON.stringify "development"
-            }
-        }
-    ]
 }

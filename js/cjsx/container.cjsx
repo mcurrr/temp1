@@ -6,7 +6,7 @@ Container = React.createClass
   displayName: 'Container'
 
   render: ->
-    <div className='col-sm-8' style={'position': 'relative'}>
+    <div className='col-sm-8 forVideo' style={'position': 'relative'}>
         <Video
           current={_.cloneDeep @props.current}
         />
