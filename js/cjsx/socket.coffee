@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "B564A47FE07237410E8DCD5EC7"})
+  window.socket.send(JSON.stringify {user_ssid: "EE3343C86C479909F5311EBDA6"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]
@@ -87,11 +87,10 @@ sortMessage = (e) ->
         events = window.App.state.events
         events.map (event) ->
           if event.event_id == inCome.data.event_id
-            console.log "UPDATE CHANNEL #{event.event_name}"
-            console.log inCome.data
+            console.log "UPDATE CHANNEL #{event.event_name}?"
             if event.event_tv_channel != inCome.data.event_tv_channel
               event.event_tv_channel = inCome.data.event_tv_channel
-              console.log "REPLACE CHANNEL IN #{event.event_name}!"
+              console.log "REPLACED CHANNEL IN #{event.event_name}!"
               ###
               SET STATE HERE
               ###
@@ -107,6 +106,8 @@ sortMessage = (e) ->
                 window.App._getVideoStreamPath() #WILL IT WORK???
                 console.log "WOPS! TV CHANNEL WAS CHANGED RIGHT NOW+++++++++++++++++++++++++++"
                 false
+            else
+              console.log "seems to be not inportant..."
 
       when 'event.set_finished'
         events = window.App.state.events

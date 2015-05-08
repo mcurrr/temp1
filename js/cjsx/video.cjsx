@@ -18,6 +18,6 @@ Video = React.createClass
         player.deleteVideo()
 
   render: ->
-    <div className='col-sm-8' ref="target"/>
+    <div ref="target"/>
 
 module.exports = Video

@@ -5,7 +5,7 @@ List = React.createClass
 
   render: ->
     <div className='col-sm-4'>
-      <ul>{
+      <ul style={{"padding": 0}}>{
         @props.events.map (event, i) =>
           word = ''
           if @props.current.i == i #if active
