@@ -225,18 +225,21 @@ App = React.createClass
                 console.log xhr.status
                 console.log thrownError
               success: (data) =>
+                console.log data
   #get URL from XML of stream, assembling url parts
                 urlUrl = $(data).find('token').attr('url')
                 urlStream = $(data).find('token').attr('stream')
                 urlAuth = $(data).find('token').attr('auth')
   #final url
                 url = "rtmp://#{urlUrl}:#{urlStream}"
+                console.log "URL with authenticatiion:", url
+                console.log "authenticatiion:", urlAuth
                 current = @state.current
                 current.url = url
                 @setState(
                   current: current 
                 )
-                console.log "stream with autentication, NOT able to show"
+                console.log "stream with autentication, NOT able to show in video.js"
           else
             current = @state.current
             current.url = url

@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "C0CFBD2C1533055B6ABA2E6D2A"})
+  window.socket.send(JSON.stringify {user_ssid: "05184E81894B7F6849879A3C8C"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]

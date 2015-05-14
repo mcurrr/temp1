@@ -8,6 +8,7 @@ Video = React.createClass
 
   componentDidUpdate: (prevProps, prevState) ->
     if !!@props.current.url
+      console.log @props.current.url
       if player.exist()
         player.deleteVideo()
       @refs.target.getDOMNode().innerHTML = "<video id='favbet-tv-video' class='video-js vjs-default-skin' width='100%' height='100%'><source src='" + @props.current.url + "' type='rtmp/flv' /><p className='vjs-no-js'>To view this video please enable JavaScript, and consider upgrading to a web browser that <a href='http://videojs.com/html5-video-support/' target='_blank'>supports HTML5 video</a></p></video>"
