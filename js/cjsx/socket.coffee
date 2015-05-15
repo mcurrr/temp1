@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "05184E81894B7F6849879A3C8C"})
+  window.socket.send(JSON.stringify {user_ssid: "E669F82ECA98BE6EB6D37EDAB1"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]
@@ -144,31 +144,31 @@ sortMessage = (e) ->
           
       when 'event.insert'
         events = window.App.state.events
-        if _.keys(inCome.data.head_market).length
-          if inCome.data.event_tv_channel?
-            inCome.data.new = true
-            console.log "WAS", events.length
-            events.push inCome.data
+#checking if it is watcheble
+        if inCome.data.event_tv_channel?
+          inCome.data.new = true
+          console.log "WAS", events.length
+          events.push inCome.data
 #sorting new array by the event name
-            sortedEvents = _.sortBy events, 'event_name'
+          console.log "events before sorting -", events
+          sortedEvents = _.sortBy events, 'event_name'
+          console.log "events after sorting -", sortedEvents
 #recounting current.i
-            current = window.App.state.current
-            actElem = _.find events, (event) ->
-              !!event.active
-            console.log "current.i was = #{current.i}"
-            current.i = _.indexOf events, actElem
-            console.log "now current.i = #{current.i} because of new incoming"
-            ###
-            SET STATE HERE
-            ###
-            window.App.setState(
-              events: sortedEvents
-              )
-            console.log "IS", window.App.state.events.length
-            console.log "ACTION-=-=-=-=-#{inCome.data.event_name} INSERT CHANNEL!"
-#no outcomes - means it is statistic
-        else
-          console.log "statistic changed"
+          current = window.App.state.current
+          actElem = _.find events, (event) ->
+            !!event.active
+          console.log "current.i was = #{current.i}"
+          current.i = _.indexOf events, actElem
+          console.log "now current.i = #{current.i} because of new incoming"
+          ###
+          SET STATE HERE
+          ###
+          window.App.setState(
+            events: sortedEvents
+            )
+          console.log "IS", window.App.state.events.length
+          console.log "ACTION-=-=-=-=-#{inCome.data.event_name} INSERT CHANNEL!"
+
 
 #================MARKETS
 
