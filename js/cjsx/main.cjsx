@@ -187,12 +187,14 @@ App = React.createClass
       url: "https://www.favbet.com/live/tv/#{@state.current.id_tv}/"
       cache: false
       dataType: 'xml'
-      error: (xhr, ajaxOptions, thrownError) ->
+      error: (xhr, ajaxOptions, thrownError) =>
         console.log xhr.status
         console.log thrownError
-        current.url = ''
+        url = ''
+        current = @state.current
+        current.url = url
         @setState(
-          current: current
+          current: current 
         )
         if xhr.status == 403
           console.log "YOU NEED TO LOG IN"
