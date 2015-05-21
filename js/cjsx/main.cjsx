@@ -5,10 +5,10 @@ socket = require './socket.coffee'
 $ = require 'jquery'
 _ = require 'lodash'
 
+require '../../css/styl/custom.styl'
 
 App = React.createClass
   displayName: 'App'
-
   getInitialState: ->
     {
       events: []
@@ -23,7 +23,7 @@ App = React.createClass
     current: React.PropTypes.object
     url: React.PropTypes.string
 
-  componentWillMount: ->
+  componentWillMount: ->    
     player.init()
 #get the list of all live events
     $.ajax
@@ -248,8 +248,7 @@ App = React.createClass
             @setState(
               current: current
             )
-
-  render: ->
+  render: ->    
     <View
       show={@handlerShowingVideo}
       events={@state.events}

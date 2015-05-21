@@ -1,6 +1,7 @@
-// require('coffee-script/register');
-// module.exports = require("./webpack.config.coffee");
+require('coffee-script/register');
+module.exports = require("./wabpack.config.coffee");
 
+/*
 module.exports = {
   entry: './js/cjsx/main.cjsx',
   watch: true,
@@ -19,3 +20,4 @@ module.exports = {
   }
 };
 
+*/

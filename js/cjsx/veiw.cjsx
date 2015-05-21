@@ -17,7 +17,7 @@ View = React.createClass
           current={@props.current}
           events={@props.events}
         />
-      </div>
+      </div>      
     </div>
 
 module.exports = View

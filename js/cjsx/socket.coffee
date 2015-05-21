@@ -5,7 +5,7 @@ window.socket = $.bullet 'wss://www.favbet.com/bullet'
 
 window.socket.onopen = ->
   console.log "window.socket opened"
-  window.socket.send(JSON.stringify {user_ssid: "6969A6B8DE101CF1D24AE6A8CF"})
+  window.socket.send(JSON.stringify {user_ssid: "54D7ECD57174310D780358FF35"})
   window.socket.send(JSON.stringify {
             dataop: {
               "live.event": ["all"]
@@ -155,17 +155,22 @@ sortMessage = (e) ->
             console.log "IT WAS ACTIVE. CHOOSE ANOTHER ONE"
           else
             current = window.App.state.current
-            events = window.App.state.events
-            actElem = _.find events, (event) ->
-              !!event.active
-            current.i = _.indexOf events, actElem
-            console.log "now current.i = #{current.i} because of deleting"
-            ###
-            SET STATE HERE
-            ###
-            window.App.setState(
-              current: current
-              )
+#if there is no active element then there is nothing to change
+            if current.i is null
+              console.log "current.i is NULL already >>>>>>><<<<<<<<<!!!>>>>>>>>><<<<<<<<<"
+              return
+            else
+              events = window.App.state.events
+              actElem = _.find events, (event) ->
+                !!event.active
+              current.i = _.indexOf events, actElem
+              console.log "now current.i = #{current.i} because of deleting"
+              ###
+              SET STATE HERE
+              ###
+              window.App.setState(
+                current: current
+                )
 
       when 'event.insert'
         events = window.App.state.events
@@ -182,11 +187,15 @@ sortMessage = (e) ->
           console.log sortedEvents
 #recounting current.i
           current = window.App.state.current
-          console.log "current.i was = #{current.i}"
-          actElem = _.find events, (event) ->
-            !!event.active
-          current.i = _.indexOf sortedEvents, actElem
-          console.log "now current.i = #{current.i} because of new incoming"
+          if current.i is null
+            console.log "current.i is NULL already >>>>>>><<<<<<<<<!!!>>>>>>>>><<<<<<<<<"
+            return
+          else
+            console.log "current.i was = #{current.i}"
+            actElem = _.find sortedEvents, (event) ->
+              !!event.active
+            current.i = _.indexOf sortedEvents, actElem
+            console.log "now current.i = #{current.i} because of new incoming"
           ###
           SET STATE HERE
           ###
